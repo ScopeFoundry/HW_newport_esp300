@@ -88,6 +88,28 @@ class ESP300(object):
         else:
             self.write_cmd(axis, "MF")
             
+    def search_for_home(self, axis, method='default'):
+        """
+        0 = Find +0 Position Count
+        1 = Find Home and Index Signals
+        2 = Find Home Signal
+        3 = Find Positive Limit Signal
+        4 = Find Negative Limit Signal
+        5 = Find Positive Limit and Index Signals
+        6 = Find Negative Limit and Index Signals
+        """
+        methods = dict(
+            default='',
+            zero_pos_count=0,
+            home_and_index_signals=1,
+            home_signal=2,
+            pos_limit_signal=3,
+            neg_limit_signal=4,
+            pos_limit_and_index_signals=5,
+            neg_limit_and_index_signals=6,
+            )
+        self.write_cmd(axis, "OR{}".format(methods[method]))
+
     def write_stop(self,axis):
         self.write_cmd(axis, "ST")
         

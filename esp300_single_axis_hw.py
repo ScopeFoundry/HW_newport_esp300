@@ -7,7 +7,7 @@ class ESP300AxisHW(HardwareComponent):
     
     def setup(self):
         
-        self.settings.New('port', str, initial='COM5')
+        self.settings.New('port', str, initial='COM1')
         self.settings.New('axis', int, initial=1, vmin=1, vmax=3)
         self.settings.New('enabled', bool, initial=True)
         self.settings.New('is_moving', bool, ro=True)

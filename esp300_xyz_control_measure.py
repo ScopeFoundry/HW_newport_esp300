@@ -15,6 +15,9 @@ class ESP300XYZStageControlMeasure(Measurement):
     def setup(self):
         pass
     
+    def run(self):
+        pass #loop that reads from hardware??
+    
     def setup_figure(self):
         
         self.ui = QWidget()
