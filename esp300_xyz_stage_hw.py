@@ -1,4 +1,6 @@
 from ScopeFoundry.hardware import HardwareComponent
+import threading
+import time
 
 
 class ESP300XYZStageHW(HardwareComponent):
@@ -80,7 +82,11 @@ class ESP300XYZStageHW(HardwareComponent):
 
             self.settings.get_lq(axis_name + "_is_moving").connect_to_hardware(
                 read_func = lambda a=axis_num: E.read_is_moving(a))
-            
+
+
+        self.update_thread_interrupted = False
+        self.update_thread = threading.Thread(target=self.update_thread_run)
+        self.update_thread.start()
 
     def disconnect(self):
         self.settings.disconnect_all_from_hardware()
@@ -88,9 +94,22 @@ class ESP300XYZStageHW(HardwareComponent):
         if hasattr(self, 'esp300'):
             self.esp300.close()
             del self.esp300
+
+        if hasattr(self, 'update_thread'):
+            self.update_thread_interrupted = True
+            self.update_thread.join(timeout=1.0)
+            del self.update_thread
     
     def move_step_delta(self, axname, dir=+1):
         "dir should be +/- 1"
         dir = dir * 1.0/ abs(dir)
         self.settings[axname + "_target_position"] += dir * self.settings[axname + '_step_delta']
+
+
+    def update_thread_run(self):
+        while not self.update_thread_interrupted:            
+            for axis_index, axis_name in enumerate(self.ax_names):
+                if axis_name != '_':
+                    self.settings.get_lq(axis_name + "_position").read_from_hardware()
+            time.sleep(0.1)
         
