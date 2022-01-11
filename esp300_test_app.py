@@ -5,9 +5,9 @@ class ESP300TestApp(BaseMicroscopeApp):
     
     def setup(self):
         
-        from esp300_xyz_stage_hw import ESP300XYZStageHW
+        from ScopeFoundryHW.newport_esp300.esp300_xyz_stage_hw import ESP300XYZStageHW
         
-        hw = self.add_hardware(ESP300XYZStageHW(self, ax_names='__z'))
+        hw = self.add_hardware(ESP300XYZStageHW(self, ax_names='_xy'))
         
         hw.settings['debug_mode'] = True
         hw.settings['port'] = 'COM1'
